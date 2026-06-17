@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - MONGODB_URI=mongodb://mongo:27017/career-intelligence-hub
+      - MONGODB_URI=mongodb://mongo:27017/career-hub
       - AUTH_SECRET=change-this-to-a-secure-random-string
       - AUTH_URL=http://localhost:3000
       - OLLAMA_BASE_URL=http://host.docker.internal:11434

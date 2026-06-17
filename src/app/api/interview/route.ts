@@ -6,13 +6,18 @@ import { generateInterviewPlan } from "@/lib/ai";
 
 export async function GET(request: NextRequest) {
   try {
-    await dbConnect();
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
 
     if (!userId) {
       return NextResponse.json({ error: "userId required" }, { status: 400 });
     }
+
+    if (userId === "demo-user") {
+      return NextResponse.json([]);
+    }
+
+    await dbConnect();
 
     const plans = await InterviewPlan.find({ userId }).sort("-createdAt").lean();
     return NextResponse.json(plans);

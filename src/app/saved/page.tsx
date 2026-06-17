@@ -48,7 +48,7 @@ export default function SavedJobsPage() {
     try {
       const response = await fetch("/api/saved-jobs?userId=demo-user");
       const data = await response.json();
-      setSavedJobs(data || []);
+      setSavedJobs(Array.isArray(data) ? data : []);
     } catch {
       console.error("Failed to fetch saved jobs");
     } finally {

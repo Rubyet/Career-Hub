@@ -4,7 +4,6 @@ import Note from "@/models/Note";
 
 export async function GET(request: NextRequest) {
   try {
-    await dbConnect();
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
     const jobId = searchParams.get("jobId");
@@ -12,6 +11,12 @@ export async function GET(request: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "userId required" }, { status: 400 });
     }
+
+    if (userId === "demo-user") {
+      return NextResponse.json([]);
+    }
+
+    await dbConnect();
 
     const query: Record<string, unknown> = { userId };
     if (jobId) query.jobId = jobId;

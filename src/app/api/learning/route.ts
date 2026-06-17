@@ -5,7 +5,6 @@ import { generateLearningRoadmap } from "@/lib/ai";
 
 export async function GET(request: NextRequest) {
   try {
-    await dbConnect();
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
     const skill = searchParams.get("skill");
@@ -13,6 +12,12 @@ export async function GET(request: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "userId required" }, { status: 400 });
     }
+
+    if (userId === "demo-user") {
+      return NextResponse.json([]);
+    }
+
+    await dbConnect();
 
     const query: Record<string, unknown> = { userId };
     if (skill) query.skill = skill;

@@ -4,13 +4,18 @@ import SavedJob from "@/models/SavedJob";
 
 export async function GET(request: NextRequest) {
   try {
-    await dbConnect();
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
 
     if (!userId) {
       return NextResponse.json({ error: "userId required" }, { status: 400 });
     }
+
+    if (userId === "demo-user") {
+      return NextResponse.json([]);
+    }
+
+    await dbConnect();
 
     const savedJobs = await SavedJob.find({ userId })
       .populate("jobId")
@@ -32,6 +37,24 @@ export async function POST(request: NextRequest) {
 
     if (!userId || !jobId) {
       return NextResponse.json({ error: "userId and jobId required" }, { status: 400 });
+    }
+
+    if (userId === "demo-user") {
+      return NextResponse.json(
+        {
+          _id: `demo-${jobId}`,
+          userId,
+          jobId,
+          notes: "",
+          tags: [],
+          readinessScore: 0,
+          skillProgress: [],
+          status: "interested",
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+        { status: 201 }
+      );
     }
 
     const existing = await SavedJob.findOne({ userId, jobId });
